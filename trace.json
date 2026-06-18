@@ -67,7 +67,7 @@
               "value": "{\"data\":null,\"total\":0,\"limit\":0,\"offset\":0,\"errors\":[{\"code\":404,\"msg\":\"trace not found\"}]}\n"
             },
             {
-              "key": "url",
+              "key": "urkl",
               "type": "string",
               "value": "https://jaeger-query.ift.hub.geo.delta.sbrf.ru/api/traces/9d11e09a72aaae539ade01e0f688eed3"
             },

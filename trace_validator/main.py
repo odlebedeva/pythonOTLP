@@ -150,103 +150,66 @@ class ReportGenerator:
 
     @staticmethod
     def generate_detailed_table(results: List[ValidationResult]) -> str:
-        """Генерация детальной таблицы с группировкой тегов по spanId"""
+        """Генерация детальной таблицы с отдельными строками для каждого тега"""
         headers = [
-            "spanId / Ключ тега",
-            "operationName",
             "Библиотека",
             "Версия",
             "serviceName",
+            "spanId",
+            "operationName",
             "Метод",
             "span.kind",
-            "Тип тега",
-            "Значение тега",
+            "Ключ тега",
+            "Тип",
+            "Значение",
             "Соотв. спецификации",
             "Соотв. семантике"
         ]
 
         table_data = []
-
-        for idx, result in enumerate(results):
+        for result in results:
             spec_status = "✓" if result.spec_compliance else "✗"
             semantic_status = "✓" if result.semantic_compliance else "✗"
 
             if result.all_tags_info:
-                # Первая строка - заголовок спана с первым тегом
-                first_tag = result.all_tags_info[0]
-                header_row = [
-                    f"▶ {result.span_id}",
-                    result.operation_name,
-                    result.library,
-                    result.version,
-                    result.service_name,
-                    result.method,
-                    result.span_kind,
-                    first_tag['type'],
-                    str(first_tag['value'])[:100],
-                    spec_status,
-                    semantic_status
-                ]
-                table_data.append(header_row)
-
-                # Подстрока с ключом первого тега
-                first_key_row = [
-                    f"  └─ {first_tag['key']}",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    ""
-                ]
-                table_data.append(first_key_row)
-
-                # Остальные теги (начиная со второго)
-                for tag in result.all_tags_info[1:]:
-                    tag_row = [
-                        f"  └─ {tag['key']}",
-                        "", "", "", "", "", "",
+                for tag in result.all_tags_info:
+                    row = [
+                        result.library,
+                        result.version,
+                        result.service_name,
+                        result.span_id,
+                        result.operation_name,
+                        result.method,
+                        result.span_kind,
+                        tag['key'],
                         tag['type'],
-                        str(tag['value'])[:100],
-                        "",
-                        ""
+                        str(tag['value'])[:100],  # Обрезаем длинные значения
+                        spec_status,
+                        semantic_status
                     ]
-                    table_data.append(tag_row)
-
-                # Разделитель между спанами
-                if idx < len(results) - 1:
-                    separator = ["─" * 30] + [""] * 10
-                    table_data.append(separator)
-
+                    table_data.append(row)
             else:
                 row = [
-                    f"▶ {result.span_id}",
-                    result.operation_name,
                     result.library,
                     result.version,
                     result.service_name,
+                    result.span_id,
+                    result.operation_name,
                     result.method,
                     result.span_kind,
-                    "-",
                     "Нет тегов",
+                    "-",
+                    "-",
                     spec_status,
                     semantic_status
                 ]
                 table_data.append(row)
 
-                if idx < len(results) - 1:
-                    separator = ["─" * 30] + [""] * 10
-                    table_data.append(separator)
-
         return tabulate(
             table_data,
             headers=headers,
             tablefmt="grid",
-            maxcolwidths=[35, 17, 15, 10, 20, 8, 12, 10, 55, 18, 18]
+            maxcolwidths=[15, 10, 20, 20, 17, 8, 12, 30, 10, 50, 15, 15]
         )
 
     @staticmethod
