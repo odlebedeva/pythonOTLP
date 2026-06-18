@@ -1,0 +1,154 @@
+{
+  "data": [
+    {
+      "traceID": "48fc244a49af62a2336bdb8baaa6914a",
+      "spans": [
+        {
+          "traceID": "48fc244a49af62a2336bdb8baaa6914a",
+          "spanID": "78f943823b0d9779",
+          "operationName": "http get",
+          "references": [],
+          "startTime": 1780901872601132,
+          "duration": 43040,
+          "tags": [
+            {
+              "key": "client.name",
+              "type": "string",
+              "value": "jaeger-query.ift.hub.geo.delta.sbrf.ru"
+            },
+            {
+              "key": "cm.otel.bs.code",
+              "type": "string",
+              "value": "saira"
+            },
+            {
+              "key": "cm.otel.export.mode",
+              "type": "string",
+              "value": "saira"
+            },
+            {
+              "key": "cm.otel.fp.id",
+              "type": "string",
+              "value": "CI11012991"
+            },
+            {
+              "key": "cm.otel.fp.module.id",
+              "type": "string",
+              "value": "CI12487951"
+            },
+            {
+              "key": "cm.otel.host.name",
+              "type": "string",
+              "value": "sberlinux-pvlss-jenci0167-d4-p36q5"
+            },
+            {
+              "key": "cm.otel.library.version",
+              "type": "string",
+              "value": "5.7.002"
+            },
+            {
+              "key": "exception",
+              "type": "string",
+              "value": "none"
+            },
+            {
+              "key": "http.request.header.x-b3-sampled",
+              "type": "string",
+              "value": "1"
+            },
+            {
+              "key": "http.response.body.compress.type",
+              "type": "string",
+              "value": "DEFLATER_BEST"
+            },
+            {
+              "key": "http.response.body",
+              "type": "string",
+              "value": "{\"data\":null,\"total\":0,\"limit\":0,\"offset\":0,\"errors\":[{\"code\":404,\"msg\":\"trace not found\"}]}\n"
+            },
+            {
+              "key": "url",
+              "type": "string",
+              "value": "https://jaeger-query.ift.hub.geo.delta.sbrf.ru/api/traces/9d11e09a72aaae539ade01e0f688eed3"
+            },
+            {
+              "key": "method",
+              "type": "string",
+              "value": "GET"
+            },
+            {
+              "key": "outcome",
+              "type": "string",
+              "value": "CLIENT_ERROR"
+            },
+            {
+              "key": "status",
+              "type": "string",
+              "value": "404"
+            },
+            {
+              "key": "uri",
+              "type": "string",
+              "value": "/api/traces/{traceId}"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "client"
+            },
+            {
+              "key": "otel.status_code",
+              "type": "string",
+              "value": "OK"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "otlp"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "cm-otlp-test-service",
+          "tags": [
+            {
+              "key": "otel.library.name",
+              "type": "string",
+              "value": "org.springframework.boot"
+            },
+            {
+              "key": "otel.library.version",
+              "type": "string",
+              "value": "3.5.11"
+            },
+            {
+              "key": "telemetry.sdk.language",
+              "type": "string",
+              "value": "java"
+            },
+            {
+              "key": "telemetry.sdk.name",
+              "type": "string",
+              "value": "opentelemetry"
+            },
+            {
+              "key": "telemetry.sdk.version",
+              "type": "string",
+              "value": "1.47.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    }
+  ],
+  "total": 0,
+  "limit": 0,
+  "offset": 0,
+  "errors": null
+}
