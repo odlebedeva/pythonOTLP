@@ -1,0 +1,1292 @@
+{
+  "specification": {
+    "http_client": {
+      "required_tags": [
+        "cm.otel.library.version",
+        "cm.otel.fp.id",
+        "cm.otel.fp.module.id",
+        "method",
+        "uri",
+        "http.url",
+        "status",
+        "outcome",
+        "exception",
+        "client.name"
+      ],
+      "tag_types": {
+        "cm.otel.library.version": "str",
+        "cm.otel.fp.id": "str",
+        "cm.otel.fp.module.id": "str",
+        "method": "str",
+        "uri": "str",
+        "http.url": "str",
+        "status": "str",
+        "outcome": "str",
+        "exception": "str",
+        "client.name": "str"
+      },
+      "value_constraints": {
+        "outcome": ["SUCCESS", "CLIENT_ERROR", "SERVER_ERROR"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "status >= 400 OR exception != 'none'"
+        }
+      ],
+      "recommended_tags": [
+        "http.request.body",
+        "http.response.body"
+      ],
+      "opt_in_tags": [
+        "http.request.header.*",
+        "http.response.header.*"
+      ]
+    },
+    "http_server": {
+      "required_tags": [
+        "cm.otel.library.version",
+        "cm.otel.fp.id",
+        "cm.otel.fp.module.id",
+        "method",
+        "uri",
+        "http.url",
+        "status",
+        "outcome",
+        "exception"
+      ],
+      "tag_types": {
+        "cm.otel.library.version": "str",
+        "cm.otel.fp.id": "str",
+        "cm.otel.fp.module.id": "str",
+        "method": "str",
+        "uri": "str",
+        "http.url": "str",
+        "status": "str",
+        "outcome": "str",
+        "exception": "str"
+      },
+      "value_constraints": {
+        "outcome": ["SUCCESS", "CLIENT_ERROR", "SERVER_ERROR"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "status >= 400 OR exception != 'none'"
+        }
+      ],
+      "recommended_tags": [
+        "http.request.body",
+        "http.response.body"
+      ],
+      "opt_in_tags": [
+        "http.request.header.*",
+        "http.response.header.*"
+      ]
+    },
+    "kafka_producer": {
+      "required_tags": [
+        "cm.otel.library.version",
+        "cm.otel.fp.id",
+        "cm.otel.fp.module.id"
+      ],
+      "tag_types": {
+        "cm.otel.library.version": "str",
+        "cm.otel.fp.id": "str",
+        "cm.otel.fp.module.id": "str"
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation failed"
+        },
+        {
+          "tag": "messaging.destination.name",
+          "condition": "span describes operation on a single message or value applies to all messages in batch"
+        },
+        {
+          "tag": "messaging.operation.type",
+          "condition": "applicable"
+        },
+        {
+          "tag": "server.address",
+          "condition": "available"
+        },
+        {
+          "tag": "messaging.batch.message_count",
+          "condition": "span describes operation on a batch of messages"
+        },
+        {
+          "tag": "messaging.kafka.message.tombstone",
+          "condition": "value is true (when missing, assumed false)"
+        }
+      ],
+      "recommended_tags": [
+        "messaging.client.id",
+        "messaging.destination.partition.id",
+        "messaging.kafka.message.key",
+        "messaging.message.id",
+        "server.port"
+      ],
+      "opt_in_tags": [
+        "messaging.message.body.size"
+      ],
+      "additional_rules": {
+        "span_name": "Должен быть в формате '{destination.name} publish'",
+        "messaging.system": "MUST be set to 'kafka' at span creation time"
+      }
+    },
+    "kafka_consumer": {
+      "required_tags": [
+        "cm.otel.library.version",
+        "cm.otel.fp.id",
+        "cm.otel.fp.module.id"
+      ],
+      "tag_types": {
+        "cm.otel.library.version": "str",
+        "cm.otel.fp.id": "str",
+        "cm.otel.fp.module.id": "str"
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation failed"
+        },
+        {
+          "tag": "messaging.destination.name",
+          "condition": "span describes operation on a single message or value applies to all messages in batch"
+        },
+        {
+          "tag": "messaging.operation.type",
+          "condition": "applicable"
+        },
+        {
+          "tag": "server.address",
+          "condition": "available"
+        },
+        {
+          "tag": "messaging.batch.message_count",
+          "condition": "span describes operation on a batch of messages"
+        },
+        {
+          "tag": "messaging.kafka.message.tombstone",
+          "condition": "value is true (when missing, assumed false)"
+        }
+      ],
+      "recommended_tags": [
+        "messaging.client.id",
+        "messaging.consumer.group.name",
+        "messaging.destination.partition.id",
+        "messaging.kafka.message.key",
+        "messaging.kafka.offset",
+        "messaging.message.id",
+        "server.port"
+      ],
+      "opt_in_tags": [
+        "messaging.message.body.size"
+      ],
+      "additional_rules": {
+        "span_name": "Должен быть в формате '{destination.name} receive'",
+        "messaging.system": "MUST be set to 'kafka' at span creation time"
+      }
+    }
+  },
+  "semantic": {
+    "http_client": {
+      "required_tags": [
+        "http.request.method",
+        "server.address",
+        "server.port",
+        "url.full"
+      ],
+      "tag_types": {
+        "http.request.method": "str",
+        "server.address": "str",
+        "server.port": "int",
+        "url.full": "str"
+      },
+      "value_constraints": {
+        "http.request.method": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "TRACE", "CONNECT"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "http.response.status_code >= 400"
+        },
+        {
+          "tag": "http.request.method_original",
+          "condition": "http.request.method is not canonical"
+        },
+        {
+          "tag": "http.response.status_code",
+          "condition": "response received"
+        },
+        {
+          "tag": "network.protocol.name",
+          "condition": "network.protocol.version is set and protocol != 'http'"
+        }
+      ],
+      "recommended_tags": [
+        "http.request.resend_count",
+        "network.peer.address",
+        "network.peer.port",
+        "network.protocol.version"
+      ],
+      "opt_in_tags": [
+        "http.request.body.content",
+        "http.request.body.size",
+        "http.request.header.*",
+        "http.request.size",
+        "http.response.body.content",
+        "http.response.body.size",
+        "http.response.header.*",
+        "http.response.size",
+        "network.transport",
+        "url.scheme",
+        "url.template",
+        "user_agent.original",
+        "user_agent.synthetic.type"
+      ],
+      "additional_rules": {
+        "status": "Если http.response.status_code >= 400 и error.type отсутствует – ошибка",
+        "span_name": "Должен начинаться с http.request.method (или HTTP для _OTHER)"
+      }
+    },
+    "http_server": {
+      "required_tags": [
+        "http.request.method",
+        "url.path",
+        "url.scheme"
+      ],
+      "tag_types": {
+        "http.request.method": "str",
+        "url.path": "str",
+        "url.scheme": "str"
+      },
+      "value_constraints": {
+        "http.request.method": ["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS", "TRACE", "CONNECT"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "http.response.status_code >= 400"
+        },
+        {
+          "tag": "http.request.method_original",
+          "condition": "http.request.method is not canonical"
+        },
+        {
+          "tag": "http.response.status_code",
+          "condition": "response sent"
+        },
+        {
+          "tag": "http.route",
+          "condition": "available"
+        },
+        {
+          "tag": "network.protocol.name",
+          "condition": "network.protocol.version is set and protocol != 'http'"
+        },
+        {
+          "tag": "server.port",
+          "condition": "server.address is set"
+        },
+        {
+          "tag": "url.query",
+          "condition": "query present"
+        }
+      ],
+      "recommended_tags": [
+        "client.address",
+        "network.peer.address",
+        "network.peer.port",
+        "network.protocol.version"
+      ],
+      "opt_in_tags": [
+        "http.request.body.content",
+        "http.request.body.size",
+        "http.request.header.*",
+        "http.request.size",
+        "http.response.body.content",
+        "http.response.body.size",
+        "http.response.header.*",
+        "http.response.size",
+        "network.transport",
+        "url.template",
+        "user_agent.original",
+        "user_agent.synthetic.type"
+      ],
+      "additional_rules": {
+        "status": "Если http.response.status_code >= 400 и error.type отсутствует – ошибка",
+        "span_name": "Должен начинаться с http.request.method (или HTTP для _OTHER), за ним может следовать http.route"
+      }
+    },
+    "kafka_producer": {
+      "required_tags": [
+        "messaging.operation.name"
+      ],
+      "tag_types": {
+        "messaging.operation.name": "str"
+      },
+      "value_constraints": {
+        "messaging.operation.name": ["send", "publish"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "messaging operation has failed"
+        },
+        {
+          "tag": "messaging.destination.name",
+          "condition": "span describes operation on a single message or value applies to all messages in batch"
+        },
+        {
+          "tag": "messaging.operation.type",
+          "condition": "applicable"
+        },
+        {
+          "tag": "server.address",
+          "condition": "available"
+        },
+        {
+          "tag": "messaging.batch.message_count",
+          "condition": "span describes operation on a batch of messages"
+        },
+        {
+          "tag": "messaging.kafka.message.tombstone",
+          "condition": "value is true (when missing, assumed false)"
+        }
+      ],
+      "recommended_tags": [
+        "messaging.client.id",
+        "messaging.destination.partition.id",
+        "messaging.kafka.message.key",
+        "messaging.message.id",
+        "server.port"
+      ],
+      "opt_in_tags": [
+        "messaging.message.body.size"
+      ],
+      "additional_rules": {
+        "span_name": "Должен быть в формате '{destination.name} publish'",
+        "messaging.system": "MUST be set to 'kafka' at span creation time"
+      }
+    },
+    "kafka_consumer": {
+      "required_tags": [
+        "messaging.operation.name"
+      ],
+      "tag_types": {
+        "messaging.operation.name": "str"
+      },
+      "value_constraints": {
+        "messaging.operation.name": ["receive", "consume", "ack", "nack"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "messaging operation has failed"
+        },
+        {
+          "tag": "messaging.destination.name",
+          "condition": "span describes operation on a single message or value applies to all messages in batch"
+        },
+        {
+          "tag": "messaging.operation.type",
+          "condition": "applicable"
+        },
+        {
+          "tag": "server.address",
+          "condition": "available"
+        },
+        {
+          "tag": "messaging.batch.message_count",
+          "condition": "span describes operation on a batch of messages"
+        },
+        {
+          "tag": "messaging.kafka.message.tombstone",
+          "condition": "value is true (when missing, assumed false)"
+        }
+      ],
+      "recommended_tags": [
+        "messaging.client.id",
+        "messaging.consumer.group.name",
+        "messaging.destination.partition.id",
+        "messaging.kafka.message.key",
+        "messaging.kafka.offset",
+        "messaging.message.id",
+        "server.port"
+      ],
+      "opt_in_tags": [
+        "messaging.message.body.size"
+      ],
+      "additional_rules": {
+        "span_name": "Должен быть в формате '{destination.name} receive'",
+        "messaging.system": "MUST be set to 'kafka' at span creation time"
+      }
+    },
+    "grpc_client": {
+      "required_tags": [
+        "rpc.method",
+        "rpc.status_code",
+        "server.address"
+      ],
+      "tag_types": {
+        "rpc.method": "str",
+        "rpc.status_code": "str",
+        "server.address": "str"
+      },
+      "value_constraints": {
+        "rpc.status_code": ["OK", "CANCELLED", "UNKNOWN", "INVALID_ARGUMENT", "DEADLINE_EXCEEDED", "NOT_FOUND", "ALREADY_EXISTS", "PERMISSION_DENIED", "RESOURCE_EXHAUSTED", "FAILED_PRECONDITION", "ABORTED", "OUT_OF_RANGE", "UNIMPLEMENTED", "INTERNAL", "UNAVAILABLE", "DATA_LOSS", "UNAUTHENTICATED"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation failed"
+        },
+        {
+          "tag": "rpc.method_original",
+          "condition": "rpc.method is different from original"
+        },
+        {
+          "tag": "server.port",
+          "condition": "available and server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "network.peer.address",
+        "network.peer.port"
+      ],
+      "opt_in_tags": [
+        "rpc.request.metadata.*",
+        "rpc.response.metadata.*"
+      ],
+      "additional_rules": {
+        "rpc.system.name": "MUST be set to 'grpc' at span creation time",
+        "span_kind": "MUST be CLIENT",
+        "span_name": "Должен быть rpc.method, если доступен, иначе rpc.system.name"
+      }
+    },
+    "grpc_server": {
+      "required_tags": [
+        "rpc.method",
+        "rpc.status_code",
+        "server.address"
+      ],
+      "tag_types": {
+        "rpc.method": "str",
+        "rpc.status_code": "str",
+        "server.address": "str"
+      },
+      "value_constraints": {
+        "rpc.status_code": ["OK", "CANCELLED", "UNKNOWN", "INVALID_ARGUMENT", "DEADLINE_EXCEEDED", "NOT_FOUND", "ALREADY_EXISTS", "PERMISSION_DENIED", "RESOURCE_EXHAUSTED", "FAILED_PRECONDITION", "ABORTED", "OUT_OF_RANGE", "UNIMPLEMENTED", "INTERNAL", "UNAVAILABLE", "DATA_LOSS", "UNAUTHENTICATED"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation failed"
+        },
+        {
+          "tag": "rpc.method_original",
+          "condition": "rpc.method is different from original"
+        },
+        {
+          "tag": "server.port",
+          "condition": "available and server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "network.peer.address",
+        "network.peer.port"
+      ],
+      "opt_in_tags": [
+        "rpc.request.metadata.*",
+        "rpc.response.metadata.*"
+      ],
+      "additional_rules": {
+        "rpc.system.name": "MUST be set to 'grpc' at span creation time",
+        "span_kind": "MUST be SERVER",
+        "span_name": "Должен быть rpc.method, если доступен, иначе rpc.system.name"
+      }
+    },
+    "jsonrpc_client": {
+      "required_tags": [],
+      "tag_types": {},
+      "value_constraints": {},
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation failed"
+        },
+        {
+          "tag": "jsonrpc.protocol.version",
+          "condition": "version != default (1.0)"
+        },
+        {
+          "tag": "rpc.method_original",
+          "condition": "rpc.method is different from original"
+        },
+        {
+          "tag": "rpc.status_code",
+          "condition": "available (error response)"
+        },
+        {
+          "tag": "server.port",
+          "condition": "server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "jsonrpc.request.id",
+        "network.peer.address",
+        "network.peer.port",
+        "server.address"
+      ],
+      "opt_in_tags": [
+        "rpc.method"
+      ],
+      "additional_rules": {
+        "rpc.system.name": "MUST be set to 'jsonrpc' at span creation time",
+        "span_kind": "MUST be CLIENT",
+        "span_name": "Должен быть rpc.method, если доступен, иначе rpc.system.name"
+      }
+    },
+    "jsonrpc_server": {
+      "required_tags": [],
+      "tag_types": {},
+      "value_constraints": {},
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation failed"
+        },
+        {
+          "tag": "jsonrpc.protocol.version",
+          "condition": "version != default (1.0)"
+        },
+        {
+          "tag": "rpc.method_original",
+          "condition": "rpc.method is different from original"
+        },
+        {
+          "tag": "rpc.status_code",
+          "condition": "available (error response)"
+        },
+        {
+          "tag": "server.port",
+          "condition": "server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "jsonrpc.request.id",
+        "network.peer.address",
+        "network.peer.port",
+        "server.address"
+      ],
+      "opt_in_tags": [
+        "rpc.method"
+      ],
+      "additional_rules": {
+        "rpc.system.name": "MUST be set to 'jsonrpc' at span creation time",
+        "span_kind": "MUST be SERVER",
+        "span_name": "Должен быть rpc.method, если доступен, иначе rpc.system.name"
+      }
+    },
+    "rpc_client": {
+      "required_tags": [
+        "rpc.system.name"
+      ],
+      "tag_types": {
+        "rpc.system.name": "str"
+      },
+      "value_constraints": {
+        "rpc.system.name": ["grpc", "dubbo", "connectrpc", "jsonrpc", "other"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation failed"
+        },
+        {
+          "tag": "rpc.method",
+          "condition": "available"
+        },
+        {
+          "tag": "rpc.method_original",
+          "condition": "rpc.method is different from original"
+        },
+        {
+          "tag": "rpc.status_code",
+          "condition": "available"
+        },
+        {
+          "tag": "server.address",
+          "condition": "available"
+        },
+        {
+          "tag": "server.port",
+          "condition": "server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "network.peer.address",
+        "network.peer.port"
+      ],
+      "opt_in_tags": [],
+      "additional_rules": {
+        "span_kind": "MUST be CLIENT",
+        "span_name": "Должен быть rpc.method, если доступен, иначе rpc.system.name"
+      }
+    },
+    "rpc_server": {
+      "required_tags": [
+        "rpc.system.name"
+      ],
+      "tag_types": {
+        "rpc.system.name": "str"
+      },
+      "value_constraints": {
+        "rpc.system.name": ["grpc", "dubbo", "connectrpc", "jsonrpc", "other"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation failed"
+        },
+        {
+          "tag": "rpc.method",
+          "condition": "available"
+        },
+        {
+          "tag": "rpc.method_original",
+          "condition": "rpc.method is different from original"
+        },
+        {
+          "tag": "rpc.status_code",
+          "condition": "available"
+        },
+        {
+          "tag": "server.address",
+          "condition": "available"
+        },
+        {
+          "tag": "server.port",
+          "condition": "server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "network.peer.address",
+        "network.peer.port"
+      ],
+      "opt_in_tags": [],
+      "additional_rules": {
+        "span_kind": "MUST be SERVER",
+        "span_name": "Должен быть rpc.method, если доступен, иначе rpc.system.name"
+      }
+    },
+    "gen_ai_client": {
+      "required_tags": [
+        "gen_ai.operation.name",
+        "gen_ai.provider.name"
+      ],
+      "tag_types": {
+        "gen_ai.operation.name": "str",
+        "gen_ai.provider.name": "str"
+      },
+      "value_constraints": {
+        "gen_ai.operation.name": [
+          "chat",
+          "generate_content",
+          "text_completion",
+          "embeddings",
+          "create_agent"
+        ]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation ended in an error"
+        },
+        {
+          "tag": "gen_ai.conversation.id",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.output.type",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.prompt.name",
+          "condition": "when a named prompt template is used"
+        },
+        {
+          "tag": "gen_ai.prompt.version",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.request.choice.count",
+          "condition": "available in request and != 1"
+        },
+        {
+          "tag": "gen_ai.request.model",
+          "condition": "available"
+        },
+        {
+          "tag": "gen_ai.request.seed",
+          "condition": "applicable and request includes a seed"
+        },
+        {
+          "tag": "gen_ai.request.stream",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.request.top_k",
+          "condition": "applicable"
+        },
+        {
+          "tag": "server.port",
+          "condition": "server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "gen_ai.conversation.compacted",
+        "gen_ai.request.frequency_penalty",
+        "gen_ai.request.max_tokens",
+        "gen_ai.request.presence_penalty",
+        "gen_ai.request.previous_response.id",
+        "gen_ai.request.reasoning.level",
+        "gen_ai.request.stop_sequences",
+        "gen_ai.request.temperature",
+        "gen_ai.request.top_p",
+        "gen_ai.response.finish_reasons",
+        "gen_ai.response.id",
+        "gen_ai.response.model",
+        "gen_ai.response.time_to_first_chunk",
+        "gen_ai.usage.audio.cache_read.input_tokens",
+        "gen_ai.usage.audio.input_tokens",
+        "gen_ai.usage.audio.output_tokens",
+        "gen_ai.usage.cache_read.input_tokens",
+        "gen_ai.usage.cache_write.input_tokens",
+        "gen_ai.usage.input_tokens",
+        "gen_ai.usage.output_tokens"
+      ],
+      "opt_in_tags": [
+        "gen_ai.request.body",
+        "gen_ai.response.body"
+      ],
+      "additional_rules": {
+        "span_name": "Должен быть в формате '{gen_ai.operation.name} {gen_ai.request.model}'",
+        "span_kind": "MUST be CLIENT (or INTERNAL for in-process models)",
+        "gen_ai.provider.name": "MUST be set at span creation time"
+      }
+    },
+    "gen_ai_agent": {
+      "required_tags": [
+        "gen_ai.operation.name",
+        "gen_ai.provider.name"
+      ],
+      "tag_types": {
+        "gen_ai.operation.name": "str",
+        "gen_ai.provider.name": "str"
+      },
+      "value_constraints": {
+        "gen_ai.operation.name": ["create_agent"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation ended in an error"
+        },
+        {
+          "tag": "gen_ai.agent.description",
+          "condition": "provided by the application"
+        },
+        {
+          "tag": "gen_ai.agent.id",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.agent.name",
+          "condition": "provided by the application"
+        },
+        {
+          "tag": "gen_ai.agent.version",
+          "condition": "provided by the application"
+        },
+        {
+          "tag": "gen_ai.request.model",
+          "condition": "available"
+        },
+        {
+          "tag": "server.port",
+          "condition": "server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "server.address"
+      ],
+      "opt_in_tags": [
+        "gen_ai.system_instructions"
+      ],
+      "additional_rules": {
+        "span_name": "Должен быть в формате 'create_agent {gen_ai.agent.name}'",
+        "span_kind": "MUST be CLIENT",
+        "gen_ai.operation.name": "SHOULD be 'create_agent'"
+      }
+    },
+    "openai_client": {
+      "required_tags": [
+        "gen_ai.operation.name",
+        "gen_ai.request.model"
+      ],
+      "tag_types": {
+        "gen_ai.operation.name": "str",
+        "gen_ai.request.model": "str"
+      },
+      "value_constraints": {
+        "gen_ai.operation.name": [
+          "chat",
+          "generate_content",
+          "text_completion",
+          "embeddings"
+        ]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation ended in an error"
+        },
+        {
+          "tag": "gen_ai.conversation.id",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.output.type",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.prompt.name",
+          "condition": "when a named prompt template is used"
+        },
+        {
+          "tag": "gen_ai.prompt.version",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.request.choice.count",
+          "condition": "available in request and != 1"
+        },
+        {
+          "tag": "gen_ai.request.seed",
+          "condition": "applicable and request includes a seed"
+        },
+        {
+          "tag": "gen_ai.request.stream",
+          "condition": "applicable"
+        },
+        {
+          "tag": "gen_ai.request.top_k",
+          "condition": "applicable"
+        },
+        {
+          "tag": "openai.request.service_tier",
+          "condition": "applicable"
+        },
+        {
+          "tag": "openai.response.service_tier",
+          "condition": "applicable"
+        },
+        {
+          "tag": "server.port",
+          "condition": "server.address is set"
+        }
+      ],
+      "recommended_tags": [
+        "gen_ai.conversation.compacted",
+        "gen_ai.request.frequency_penalty",
+        "gen_ai.request.max_tokens",
+        "gen_ai.request.presence_penalty",
+        "gen_ai.request.previous_response.id",
+        "gen_ai.request.reasoning.level",
+        "gen_ai.request.stop_sequences",
+        "gen_ai.request.temperature",
+        "gen_ai.request.top_p",
+        "gen_ai.response.finish_reasons",
+        "gen_ai.response.id",
+        "gen_ai.response.model",
+        "gen_ai.response.time_to_first_chunk",
+        "gen_ai.usage.audio.cache_read.input_tokens",
+        "gen_ai.usage.audio.input_tokens",
+        "gen_ai.usage.audio.output_tokens",
+        "gen_ai.usage.cache_read.input_tokens",
+        "gen_ai.usage.cache_write.input_tokens",
+        "gen_ai.usage.input_tokens",
+        "gen_ai.usage.output_tokens"
+      ],
+      "opt_in_tags": [
+        "gen_ai.request.body",
+        "gen_ai.response.body"
+      ],
+      "additional_rules": {
+        "span_name": "Должен быть в формате '{gen_ai.operation.name} {gen_ai.request.model}'",
+        "span_kind": "MUST be CLIENT",
+        "gen_ai.provider.name": "MUST be set to 'openai' at span creation time"
+      }
+    },
+    "mcp_client": {
+      "required_tags": [
+        "mcp.method.name"
+      ],
+      "tag_types": {
+        "mcp.method.name": "str"
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "error.type",
+          "condition": "operation fails"
+        },
+        {
+          "tag": "gen_ai.prompt.name",
+          "condition": "operation is related to a specific prompt"
+        },
+        {
+          "tag": "gen_ai.tool.name",
+          "condition": "operation is related to a specific tool"
+        },
+        {
+          "tag": "jsonrpc.request.id",
+          "condition": "client executes a request"
+        },
+        {
+          "tag": "mcp.resource.uri",
+          "condition": "applicable"
+        }
+      ],
+      "recommended_tags": [],
+      "opt_in_tags": [],
+      "additional_rules": {
+        "span_name": "Должен быть в формате '{mcp.method.name} {target}', где target = gen_ai.tool.name или gen_ai.prompt.name",
+        "span_kind": "MUST be CLIENT",
+        "context_propagation": "MUST use params._meta for traceparent, tracestate, baggage"
+      }
+    },
+    "db_client": {
+      "required_tags": [
+        "db.system.name"
+      ],
+      "tag_types": {
+        "db.system.name": "str"
+      },
+      "value_constraints": {
+        "db.system.name": [
+          "other_sql",
+          "actian.ingres",
+          "cockroachdb",
+          "derby",
+          "firebirdsql",
+          "h2database",
+          "hsqldb",
+          "ibm.db2",
+          "mariadb",
+          "microsoft.sql_server",
+          "mysql",
+          "oracle.db",
+          "postgresql",
+          "sap.maxdb",
+          "sqlite",
+          "trino",
+          "cassandra",
+          "elasticsearch"
+        ]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "db.collection.name",
+          "condition": "if operation is performed on a collection"
+        },
+        {
+          "tag": "db.namespace",
+          "condition": "if available without an additional network call"
+        },
+        {
+          "tag": "db.operation.name",
+          "condition": "if operation has a name"
+        },
+        {
+          "tag": "db.response.status_code",
+          "condition": "if response was received"
+        },
+        {
+          "tag": "error.type",
+          "condition": "if and only if the operation failed"
+        },
+        {
+          "tag": "server.port",
+          "condition": "if available"
+        }
+      ],
+      "recommended_tags": [
+        "db.operation.batch.size",
+        "db.query.summary",
+        "db.query.text",
+        "db.stored_procedure.name",
+        "network.peer.address"
+      ],
+      "opt_in_tags": [],
+      "additional_rules": {
+        "span_name": "SHOULD be {db.query.summary} if available, otherwise {db.operation.name} {target}, otherwise {target}, otherwise {db.system.name}. {target} is db.collection.name, db.stored_procedure.name, db.namespace, or server.address:server.port.",
+        "span_kind": "MUST be CLIENT (or INTERNAL for in-memory calls)"
+      }
+    },
+    "sql": {
+      "required_tags": [],
+      "tag_types": {},
+      "value_constraints": {},
+      "conditional_required_tags": [
+        {
+          "tag": "db.namespace",
+          "condition": "if available without an additional network call"
+        },
+        {
+          "tag": "db.response.status_code",
+          "condition": "if response has ended with warning or an error"
+        },
+        {
+          "tag": "error.type",
+          "condition": "if and only if the operation failed"
+        },
+        {
+          "tag": "server.port",
+          "condition": "if available"
+        }
+      ],
+      "recommended_tags": [
+        "db.collection.name",
+        "db.operation.batch.size",
+        "db.operation.name",
+        "db.query.summary",
+        "db.query.text",
+        "db.stored_procedure.name"
+      ],
+      "opt_in_tags": [
+        "db.query.parameter.*",
+        "db.response.returned_rows"
+      ],
+      "additional_rules": {
+        "db.system.name": "MUST be set to one of the SQL database systems (other_sql, mysql, postgresql, oracle.db, etc.)",
+        "span_name": "SHOULD follow general database span name convention",
+        "span_kind": "SHOULD be CLIENT"
+      }
+    },
+    "cassandra": {
+      "required_tags": [],
+      "tag_types": {},
+      "value_constraints": {},
+      "conditional_required_tags": [
+        {
+          "tag": "db.collection.name",
+          "condition": "if the operation is acting upon a table"
+        },
+        {
+          "tag": "db.namespace",
+          "condition": "if available"
+        },
+        {
+          "tag": "db.operation.name",
+          "condition": "if operation has a name"
+        },
+        {
+          "tag": "db.response.status_code",
+          "condition": "if response was received"
+        },
+        {
+          "tag": "error.type",
+          "condition": "if and only if the operation failed"
+        },
+        {
+          "tag": "server.port",
+          "condition": "if available"
+        }
+      ],
+      "recommended_tags": [
+        "cassandra.consistency.level",
+        "cassandra.coordinator.dc",
+        "cassandra.coordinator.id",
+        "cassandra.page.size",
+        "cassandra.query.idempotent"
+      ],
+      "opt_in_tags": [],
+      "additional_rules": {
+        "db.system.name": "MUST be set to 'cassandra' at span creation time",
+        "span_name": "SHOULD follow general database span name convention",
+        "span_kind": "SHOULD be CLIENT"
+      }
+    },
+    "elasticsearch": {
+      "required_tags": [
+        "db.operation.name",
+        "http.request.method",
+        "url.full"
+      ],
+      "tag_types": {
+        "db.operation.name": "str",
+        "http.request.method": "str",
+        "url.full": "str"
+      },
+      "value_constraints": {
+        "http.request.method": ["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"]
+      },
+      "conditional_required_tags": [
+        {
+          "tag": "db.operation.parameter.*",
+          "condition": "when the URL has path parameters"
+        },
+        {
+          "tag": "db.response.status_code",
+          "condition": "if response was received"
+        },
+        {
+          "tag": "error.type",
+          "condition": "if and only if the operation failed"
+        },
+        {
+          "tag": "server.port",
+          "condition": "if available"
+        }
+      ],
+      "recommended_tags": [
+        "db.collection.name",
+        "db.namespace",
+        "db.operation.batch.size",
+        "db.query.text"
+      ],
+      "opt_in_tags": [],
+      "additional_rules": {
+        "db.system.name": "MUST be set to 'elasticsearch' at span creation time",
+        "span_name": "SHOULD follow general database span name convention with endpoint identifier in db.operation.name and index in db.collection.name",
+        "span_kind": "SHOULD be CLIENT"
+      }
+    },
+    "mysql": {
+      "required_tags": [],
+      "tag_types": {},
+      "value_constraints": {},
+      "conditional_required_tags": [
+        {
+          "tag": "db.namespace",
+          "condition": "if available without an additional network call"
+        },
+        {
+          "tag": "db.response.status_code",
+          "condition": "if response has ended with warning or an error"
+        },
+        {
+          "tag": "error.type",
+          "condition": "if and only if the operation failed"
+        },
+        {
+          "tag": "server.port",
+          "condition": "if available"
+        }
+      ],
+      "recommended_tags": [
+        "db.collection.name",
+        "db.operation.batch.size",
+        "db.operation.name",
+        "db.query.summary",
+        "db.query.text",
+        "db.stored_procedure.name",
+        "server.address"
+      ],
+      "opt_in_tags": [
+        "db.query.parameter.*",
+        "db.response.returned_rows"
+      ],
+      "additional_rules": {
+        "db.system.name": "MUST be set to 'mysql' at span creation time",
+        "span_name": "SHOULD follow general database span name convention",
+        "span_kind": "SHOULD be CLIENT"
+      }
+    },
+    "postgresql": {
+      "required_tags": [],
+      "tag_types": {},
+      "value_constraints": {},
+      "conditional_required_tags": [
+        {
+          "tag": "db.namespace",
+          "condition": "if available without an additional network call"
+        },
+        {
+          "tag": "db.response.status_code",
+          "condition": "if response has ended with warning or an error"
+        },
+        {
+          "tag": "error.type",
+          "condition": "if and only if the operation failed"
+        },
+        {
+          "tag": "server.port",
+          "condition": "if available"
+        }
+      ],
+      "recommended_tags": [
+        "db.collection.name",
+        "db.operation.batch.size",
+        "db.operation.name",
+        "db.query.summary",
+        "db.query.text",
+        "db.stored_procedure.name",
+        "server.address"
+      ],
+      "opt_in_tags": [
+        "db.query.parameter.*",
+        "db.response.returned_rows"
+      ],
+      "additional_rules": {
+        "db.system.name": "MUST be set to 'postgresql' at span creation time",
+        "span_name": "SHOULD follow general database span name convention",
+        "span_kind": "SHOULD be CLIENT"
+      }
+    },
+    "oracle_db": {
+      "required_tags": [],
+      "tag_types": {},
+      "value_constraints": {},
+      "conditional_required_tags": [
+        {
+          "tag": "db.namespace",
+          "condition": "if available without an additional network call"
+        },
+        {
+          "tag": "db.response.status_code",
+          "condition": "if response has ended with warning or an error"
+        },
+        {
+          "tag": "error.type",
+          "condition": "if and only if the operation failed"
+        },
+        {
+          "tag": "server.port",
+          "condition": "if available"
+        }
+      ],
+      "recommended_tags": [
+        "db.collection.name",
+        "db.operation.batch.size",
+        "db.operation.name",
+        "db.query.summary",
+        "db.query.text",
+        "db.stored_procedure.name",
+        "oracle.db.domain",
+        "oracle.db.instance.name",
+        "oracle.db.name"
+      ],
+      "opt_in_tags": [],
+      "additional_rules": {
+        "db.system.name": "MUST be set to 'oracle.db' at span creation time",
+        "span_name": "SHOULD follow general database span name convention",
+        "span_kind": "SHOULD be CLIENT"
+      }
+    }
+  }
+}

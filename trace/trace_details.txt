@@ -1,0 +1,89 @@
+================================================================================
+ДЕТАЛИ ПО ТЕГАМ ДЛЯ КАЖДОГО СПАНА
+================================================================================
+
+Спан #1 (spanID=78f943823b0d9779)
+  Service: cm-otlp-test-service
+  Operation: http get
+  Kind: client
+  Теги:
+    client.name: jaeger-query.ift.hub.geo.delta.sbrf.ru
+        Спецификация: ✓
+        Семантика:    ?
+    cm.otel.bs.code: saira
+        Спецификация: ✓
+        Семантика:    ?
+    cm.otel.export.mode: saira
+        Спецификация: ✓
+        Семантика:    ?
+    cm.otel.fp.id: CI11012991
+        Спецификация: ✓
+        Семантика:    ?
+    cm.otel.fp.module.id: CI12487951
+        Спецификация: ✓
+        Семантика:    ?
+    cm.otel.host.name: sberlinux-pvlss-jenci0167-d4-p36q5
+        Спецификация: ✓
+        Семантика:    ?
+    cm.otel.library.version: 5.7.002
+        Спецификация: ✓
+        Семантика:    ?
+    exception: none
+        Спецификация: ✓
+        Семантика:    ?
+    http.request.header.x-b3-sampled: 1
+        Спецификация: ✓
+        Семантика:    ?
+    http.response.body.compress.type: DEFLATER_BEST
+        Спецификация: ✓
+        Семантика:    ?
+    http.response.body: {"data":null,"total":0,"limit":0,"offset":0,"errors":[{"code":404,"msg":"trace not found"}]}
+
+        Спецификация: ✓
+        Семантика:    ?
+    urkl: https://jaeger-query.ift.hub.geo.delta.sbrf.ru/api/traces/9d11e09a72aaae539ade01e0f688eed3
+        Спецификация: ✓
+        Семантика:    ?
+    method: GET
+        Спецификация: ✓
+        Семантика:    ?
+    outcome: CLIENT_ERROR
+        Спецификация: ✓
+        Семантика:    ?
+    status: 404
+        Спецификация: ✓
+        Семантика:    ?
+    uri: /api/traces/{traceId}
+        Спецификация: ✓
+        Семантика:    ?
+    span.kind: client
+        Спецификация: ✓
+        Семантика:    ?
+    otel.status_code: OK
+        Спецификация: ✓
+        Семантика:    ?
+    internal.span.format: otlp
+        Спецификация: ✓
+        Семантика:    ?
+    otel.library.name: org.springframework.boot
+        Спецификация: ✓
+        Семантика:    ?
+    otel.library.version: 3.5.11
+        Спецификация: ✓
+        Семантика:    ?
+    telemetry.sdk.language: java
+        Спецификация: ✓
+        Семантика:    ?
+    telemetry.sdk.name: opentelemetry
+        Спецификация: ✓
+        Семантика:    ?
+    telemetry.sdk.version: 1.47.0
+        Спецификация: ✓
+        Семантика:    ?
+  Ошибки спана:
+    [SPEC] Отсутствует обязательный атрибут: http.url
+    [SPEC] Условно-обязательный атрибут 'error.type' отсутствует при условии: status >= 400 OR exception != 'none'
+    [SEM]  Отсутствует обязательный атрибут: http.request.method
+    [SEM]  Отсутствует обязательный атрибут: server.address
+    [SEM]  Отсутствует обязательный атрибут: server.port
+    [SEM]  Отсутствует обязательный атрибут: url.full
